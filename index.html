@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <!-- css -->
+    <link rel="stylesheet" href="./weather.css">
+
+    <!-- bootstrap -->
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+
+    <!-- google fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap"
+        rel="stylesheet">
+
+    <!-- font awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+</head>
+
+
+<body onload="search('Kochi')">
+
+    <div class="row w-100 ">
+        <div class="col-md-2"></div>
+        <div class="col-md-8 d-flex align-items-center justify-content-center mt-1">
+            <div class="p-2" >
+                <h1 class="fw-bold m-5 text-center"><i> Weather Teller </i></h1>                
+                <form class="d-flex align-items-center justify-content-center">
+                    <input on id="city_in"  type="text" class="form-control w-100" placeholder="Enter the city" onkeypress="enter()">
+                    <button type="button" class=" btn btn-primary border rounded ms-1 " style="height:37px; width:50px"
+                        onclick="search()" > <i class="fas fa-search f-2x "></i> </button>
+                </form>
+                <p id="cityerror" class="text-center text-danger"> </p>
+            </div> 
+                       
+        </div>
+        <div class="col-md-2"></div>
+    </div>
+
+    <div class="row mt-2"  >
+        <div class="col-md-2"></div>
+        <div id="container1"  class="col-md-4 mx-2 rounded shadow ">
+            <h6 id="datetime" class="text-warning fw-bolder mt-5 ms-5" > Fri Jun-07-2024 22:52:50 AM </h6>
+            <div  class=" d-flex mt-3 justify-content-center  ">
+               
+                <div id="info1">
+                
+                </div>
+                
+                
+            </div>
+        </div>
+        <div id="container2" class="col-md-4 mx-2 rounded shadow d-flex justify-content-center">
+            <div id="info2" class="mt-5  text-light">
+                    
+
+            </div>
+        </div>
+        <div class="col-md-2"></div>
+        
+    </div>
+
+</body>
+
+<script>
+    //   get date and time
+
+    function getTime() {
+       
+        const time = new Date();
+        const day = time.toLocaleString('en-US', { weekday: "long" })
+        const date = time.getDate()
+        const month = time.toLocaleString('en-US', { month: "short" })
+        const year = time.getFullYear()
+        
+       let hour = time.getHours()
+        console.log(hour)
+       let min = time.getMinutes()
+        console.log(min)
+        const sec = time.getSeconds()
+        console.log(sec)
+        
+        let newformat = hour >= 12 ? 'PM' : 'AM'
+         // Find current hour in AM-PM Format
+         hour = hour % 12;
+        // To display "0" as "12"
+        hour = hour ? hour : 12;
+        min = min < 10 ? '0' + min : min;
+
+    
+        datetime.innerHTML = `${day}  ${month}-${date} ${hour} : ${min} ${newformat}`
+
+        // calling the getTime fuction every second to run the time continously
+        setTimeout(() => {
+            getTime()
+        }, 1000)
+    }
+    // function call
+    getTime()
+ 
+
+
+    search = async (place) => {
+       let city=''
+        if(place){
+            city=place
+        }
+        else{
+         city = city_in.value
+         console.log(city)
+
+         } 
+
+        if (city) {
+
+          
+             const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=5fe36b192ffd1c36dffb6752bc1722b2`)
+
+                response.json().then(data => {
+                console.log(data)
+                
+                //city name
+                const cityname = data.name
+               
+                //weather description
+                
+                const { main, description,icon}=data.weather[0]
+               
+                //feeling temp
+                let { temp, feels_like, temp_min, temp_max,pressure,humidity} =data.main
+                 temp=Math.round(temp-273.15)
+                 feels_like= Math.round(feels_like-273.15)
+                 temp_min= Math.round(temp_min-273.15)
+                 temp_max= Math.round(temp_max-273.15)
+
+                 const wind_speed= data.wind.speed
+                const  country= data.sys.country
+                
+                info1.innerHTML=
+                `<h2  class="fw-bolder text-light">${cityname}, ${country} </h2>
+                <h2 class='ps-5'><img id='icon' src="https://openweathermap.org/img/wn/${icon}@4x.png" alt=""> <span class="text-light">${temp}℃ </span></h2>
+                <p class="text-warning">${main}, ${description}</p> `     
+                
+                info2.innerHTML=` <p> <span > Feels like:</span> ${feels_like}°C </p>
+                <p> <span > Temp Min: </span>${temp_min}°C   <span> Temp Max: </span>${temp_max}°C</p>
+                <p> <span >Humidity:</span>  ${humidity}% </p>               
+                <p><span >Wind:</span>  ${wind_speed} KM/H</p>                
+                <p> <span >Pressure: </span> ${pressure} hPa</p>`
+               
+
+            })
+
+        }
+        else {
+          
+            cityerror.innerHTML=  `Enter a city name`    
+         }
+    }
+
+    
+</script>
+
+</html>

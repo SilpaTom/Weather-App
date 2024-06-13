@@ -1,0 +1,57 @@
+* {
+    font-family: "Roboto", sans-serif;
+    padding:0;
+    margin:0;
+    
+
+}
+body {
+    
+    background-image: url("https://miro.medium.com/v2/resize:fit:5120/1*GsImz-edoeuqCMfKxDus0w.jpeg");
+    background-size: cover;    
+    overflow-x: hidden;   
+    background-attachment: fixed; 
+
+   
+}
+
+
+@media only screen and (max-width: 767px){
+body {  
+    background-repeat: no-repeat;
+
+}
+}
+
+#icon{
+ transform: scaleX(1);
+}
+
+#datetime{
+    
+    color: rgb(39, 48, 41);
+}
+ #container2 div span{
+    color:rgb(231, 189, 112);
+    font-weight: bold;
+    
+ }
+#container1{
+       
+      background:linear-gradient(to left top, 
+         rgb(183, 171, 233) , rgb(67, 61, 224));
+     
+}
+
+#container2{
+    
+    background:linear-gradient(to right bottom, 
+    rgb(183, 171, 233) , rgb(67, 61, 224))
+   
+}
+#icon {
+    width: 100px;
+    height: 100px;
+   
+  }
+  
